@@ -7,20 +7,31 @@ on:
 jobs:
   delete-branch:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
-      - name: Delete branch corresponding to Jira ticket
+
+      - name: Fetch all remote branches
+        run: git fetch --all
+
+      - name: Find and delete matching branch corresponding to Jira ticket
         run: |
-          # Get the branch name from the Jira ticket key (e.g., PROJ-123)
-          BRANCH_NAME="${{ github.event.client_payload.issueKey }}-*"
+          # Define the branch pattern using the Jira issue key (e.g., SCRUM-1-*)
+          BRANCH_PATTERN="${{ github.event.client_payload.issueKey }}-*"
           
-          # Delete the local branch
-          git branch -D $BRANCH_NAME
+          # List all remote branches and search for a match using the pattern
+          MATCHING_BRANCH=$(git branch -r | grep "origin/${BRANCH_PATTERN}" | head -n 1)
           
-          # Delete the remote branch
-          git push origin --delete $BRANCH_NAME
+          if [ -n "$MATCHING_BRANCH" ]; then
+            # Extract the branch name from the match (remove 'origin/' prefix)
+            BRANCH_NAME="${MATCHING_BRANCH#origin/}"
+            
+            # Delete the remote branch
+            git push origin --delete "$BRANCH_NAME"
+            echo "Successfully deleted branch: $BRANCH_NAME"
+          else
+            echo "No matching branch found for pattern: $BRANCH_PATTERN"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

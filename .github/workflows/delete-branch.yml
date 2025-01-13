@@ -15,8 +15,8 @@ jobs:
       - name: Fetch all remote branches
         run: git fetch --all
 
-      - name: check remote 
-        run: git remote -v
+      - name: set url with pat 
+        run: git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
 
       - name: Find and delete matching branch corresponding to Jira ticket
         run: |
@@ -37,5 +37,3 @@ jobs:
           else
             echo "No matching branch found for pattern: $BRANCH_PATTERN"
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

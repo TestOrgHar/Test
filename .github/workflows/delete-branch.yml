@@ -26,8 +26,7 @@ jobs:
           if [ -n "$MATCHING_BRANCH" ]; then
             # Remove 'origin/' from the branch name, ensuring no leading/trailing spaces
             BRANCH_NAME="${MATCHING_BRANCH#origin/}"
-            BRANCH_NAME=$(echo "$BRANCH_NAME" | xargs)  # Removes any extra spaces
-
+      
             # Delete the remote branch
             git push origin --delete "$BRANCH_NAME"
             echo "Successfully deleted branch: $BRANCH_NAME"

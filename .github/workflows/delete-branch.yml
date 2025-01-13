@@ -15,6 +15,9 @@ jobs:
       - name: Fetch all remote branches
         run: git fetch --all
 
+      - name: check remote 
+        run: git remote -v
+
       - name: Find and delete matching branch corresponding to Jira ticket
         run: |
           # Define the branch pattern using the Jira issue key (e.g., SCRUM-1-*)

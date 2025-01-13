@@ -1,0 +1,26 @@
+name: Delete Branch on Jira Task Done
+
+on:
+  repository_dispatch:
+    types: [jira-task-done]
+
+jobs:
+  delete-branch:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Delete branch corresponding to Jira ticket
+        run: |
+          # Get the branch name from the Jira ticket key (e.g., PROJ-123)
+          BRANCH_NAME="${{ github.event.client_payload.issueKey }}-*"
+          
+          # Delete the local branch
+          git branch -D $BRANCH_NAME
+          
+          # Delete the remote branch
+          git push origin --delete $BRANCH_NAME
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

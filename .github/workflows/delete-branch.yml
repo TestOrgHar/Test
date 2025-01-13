@@ -24,9 +24,10 @@ jobs:
           MATCHING_BRANCH=$(git branch -r | grep "origin/${BRANCH_PATTERN}" | head -n 1)
           
           if [ -n "$MATCHING_BRANCH" ]; then
-            # Extract the branch name from the match (remove 'origin/' prefix)
+            # Remove 'origin/' from the branch name, ensuring no leading/trailing spaces
             BRANCH_NAME="${MATCHING_BRANCH#origin/}"
-            
+            BRANCH_NAME=$(echo "$BRANCH_NAME" | xargs)  # Removes any extra spaces
+
             # Delete the remote branch
             git push origin --delete "$BRANCH_NAME"
             echo "Successfully deleted branch: $BRANCH_NAME"

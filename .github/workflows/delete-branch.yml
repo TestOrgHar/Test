@@ -28,7 +28,7 @@ jobs:
           
           if [ -n "$MATCHING_BRANCH" ]; then
             # Remove 'origin/' from the branch name, ensuring no leading/trailing spaces
-            BRANCH_NAME="${MATCHING_BRANCH#origin/}"
+            BRANCH_NAME=$(echo "$MATCHING_BRANCH" | sed 's#origin/##')
             BRANCH_NAME=$(echo "$BRANCH_NAME" | xargs)
             echo "Branch to delete: '$BRANCH_NAME'"
             # Delete the remote branch

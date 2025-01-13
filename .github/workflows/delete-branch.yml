@@ -30,7 +30,7 @@ jobs:
             # Remove 'origin/' from the branch name, ensuring no leading/trailing spaces
             BRANCH_NAME="${MATCHING_BRANCH#origin/}"
             BRANCH_NAME=$(echo "$BRANCH_NAME" | xargs)
-      
+            echo "Branch to delete: '$BRANCH_NAME'"
             # Delete the remote branch
             git push origin --delete "$BRANCH_NAME"
             echo "Successfully deleted branch: $BRANCH_NAME"
